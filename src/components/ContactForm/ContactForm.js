@@ -2,11 +2,12 @@ import f from "./ContactForm.module.css";
 import { useState } from "react";
 import {useAddContactMutation, useGetContactsQuery} from "..//../redux/api/contactsApi"
 
-function Form({contacts}) {
+function Form() {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
 
-const [addContact] = useAddContactMutation();
+  const {data: contacts} = useGetContactsQuery();
+  const [addContact] = useAddContactMutation();
 
   const onChangeInput = (e) => {
     const { name, value } = e.currentTarget;
