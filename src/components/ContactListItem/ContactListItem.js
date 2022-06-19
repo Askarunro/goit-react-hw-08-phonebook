@@ -1,7 +1,6 @@
 import i from "./ContactListItem.module.css";
 import { useSelector  } from "react-redux";
 import { useDeleteContactMutation, useGetContactsQuery } from "..//../redux/api/contactsApi"
-import PropTypes from 'prop-types';
 
 function Item() {
   const filter = useSelector((state) => state.filter);
@@ -30,7 +29,3 @@ function Item() {
 }
 
 export default Item;
-
-Item.propTypes={
-  contacts: PropTypes.array,
-}
