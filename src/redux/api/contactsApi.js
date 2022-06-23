@@ -65,10 +65,7 @@ const axiosBaseQuery =
         }
     );
     const token = JSON.parse(localStorage.getItem('token'))|| "";
-  //   const headers = 
-  // {      
-  //   Authorization : `Bearer ${token}` ,      
-  // }; 
+
     try {
       const result = await axios({ url: baseUrl + url, method, data, params })
       return { data: result.data }
