@@ -1,6 +1,8 @@
-import { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { authOperations } from '../redux/auth';
+import { useState, useEffect } from 'react';
+import { useLoginUserMutation } from "..//redux/api/usersApi"
+import { useDispatch } from "react-redux";
+import { myToken } from "..//redux/reduce/filter";
+
 
 const styles = {
   form: {
@@ -14,9 +16,27 @@ const styles = {
 };
 
 export default function LoginView() {
+
   const dispatch = useDispatch();
+
+    const [loginUser] = useLoginUserMutation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [token, setToken] = useState('');
+
+
+  useEffect(() => {
+    localStorage.setItem('token', JSON.stringify(token));
+    // dispatch(myToken(token));
+  }, [token]);
+
+  // useEffect(() => {
+  //   if (localStorage.getItem("token") !== null) {
+  //     const cont = localStorage.getItem("token");
+  //     const parsedContacts = JSON.parse(cont);
+  //     setToken([...parsedContacts]);
+  //   }
+  // }, token);
 
   const handleChange = ({ target: { name, value } }) => {
     switch (name) {
@@ -29,11 +49,29 @@ export default function LoginView() {
     }
   };
 
-  const handleSubmit = e => {
-    e.preventDefault();
-    dispatch(authOperations.logIn({ email, password }));
+  const formSubmitHandler = async (values) => {
+   const res =  await loginUser(values);
+    try{
+        if(res.data.token){
+        return setToken(res.data.token)
+        }
+        alert(`Error status ${res.error.status}, message: not found email or password`)
+    }catch{
+      alert(`Error status ${res.error.status}, message: not found email or password`)
+    }
+  };
+
+  const reset = () => {
     setEmail('');
     setPassword('');
+   }
+
+  const handleSubmit = e => {
+    e.preventDefault();
+    formSubmitHandler({ email, password });
+    // dispatch(myToken(token))
+    // dispatch(myToken(''))
+    reset()
   };
 
   return (
