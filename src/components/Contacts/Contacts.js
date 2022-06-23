@@ -24,6 +24,8 @@ import ContactList from "../ContactList/";
 // });
 
 function Contacts() {
+  const token = useSelector((state) => state.token);
+  
   return (
     <div>
     <h1>Phonebook</h1>
