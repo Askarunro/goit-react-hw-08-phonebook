@@ -1,12 +1,15 @@
 import i from "./ContactListItem.module.css";
 import { useSelector  } from "react-redux";
+import { NavLink, useSearchParams} from "react-router-dom";
+import { useEffect } from "react";
 import { useDeleteContactMutation, useGetContactsQuery } from "..//../redux/api/contactsApi"
 
 function Item() {
   const filter = useSelector((state) => state.filter);
   const [deleteContact] = useDeleteContactMutation();
-  const {data: contacts} = useGetContactsQuery();
+  const {data: contacts } = useGetContactsQuery();
 
+ 
   return (
     <>
       {contacts && (contacts
@@ -14,14 +17,18 @@ function Item() {
           option.name.toLowerCase().includes(filter.toLowerCase())
         )
         .map((contact) => (
+          
           <li key={contact.name} className={i.item} data-id={contact.name}>
+            
+            <NavLink to={`/contacts/${contact.id}`}>
             <p>{contact.name}:</p>
-            <p>{contact.phone}</p>
-            <button type="button" 
+            <p>{contact.number}</p>
+              </NavLink>
+            {/* <button type="button" 
             onClick={()=>deleteContact(contact.id)} 
             className={i.btn}>
               Delete
-            </button>
+            </button> */}
           </li>
         )))}
     </>
