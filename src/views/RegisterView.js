@@ -1,6 +1,8 @@
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { authOperations } from '../redux/auth';
+// import { useDispatch } from 'react-redux';
+// import { authOperations } from '../redux/auth';
+import { useRegisterUserMutation } from "..//redux/api/usersApi"
+
 
 const styles = {
   form: {
@@ -14,7 +16,9 @@ const styles = {
 };
 
 export default function RegisterView() {
-  const dispatch = useDispatch();
+  const [loginUser, isSuccess] = useRegisterUserMutation();
+  // console.log(useRegisterUserMutation)
+  // const dispatch = useDispatch();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -32,12 +36,28 @@ export default function RegisterView() {
     }
   };
 
-  const handleSubmit = e => {
-    e.preventDefault();
-    dispatch(authOperations.register({ name, email, password }));
+  const formSubmitHandler = async (values) => {
+    const res =  await loginUser(values);
+     try{
+         if(res.data.token){
+          return console.log('Ok')
+         }
+         console.log('problem')
+     }catch{
+         console.log('problem')
+     }
+   };
+
+   const reset = () => {
     setName('');
     setEmail('');
     setPassword('');
+   }
+
+  const handleSubmit = e => {
+    e.preventDefault();
+    formSubmitHandler({ name, email, password });
+    reset()
   };
 
   return (
