@@ -1,10 +1,10 @@
 import f from "./ContactForm.module.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {useAddContactMutation, useGetContactsQuery} from "..//../redux/api/contactsApi"
 
 function Form() {
   const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
+  const [number, setNumber] = useState("");
 
   const {data: contacts} = useGetContactsQuery();
   const [addContact] = useAddContactMutation();
@@ -16,8 +16,8 @@ function Form() {
       case "name":
         setName(value);
         break;
-      case "phone":
-        setPhone(value);
+      case "number":
+        setNumber(value);
         break;
     }
   };
@@ -33,17 +33,18 @@ function Form() {
     }
     if (!exist) {
       await addContact(values);
+      console.log(values)
     } else alert(`${values.name} is already i contacts`);
   };
 
   const reset = () => {
     setName("");
-    setPhone("");
+    setNumber("");
   };
 
   const onSubmitForm = (e) => {
     e.preventDefault();
-    formSubmitHandler({ name, phone });
+    formSubmitHandler({ name, number });
     reset();
   };
 
@@ -65,8 +66,8 @@ function Form() {
         Number
         <input
           type="tel"
-          name="phone"
-          value={phone}
+          name="number"
+          value={number}
           pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
           title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
           required
