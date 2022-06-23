@@ -16,7 +16,7 @@ const styles = {
 };
 
 export default function RegisterView() {
-  const [loginUser, isSuccess] = useRegisterUserMutation();
+  const [registerUser, isSuccess] = useRegisterUserMutation();
   // console.log(useRegisterUserMutation)
   // const dispatch = useDispatch();
   const [name, setName] = useState('');
@@ -37,7 +37,8 @@ export default function RegisterView() {
   };
 
   const formSubmitHandler = async (values) => {
-    const res =  await loginUser(values);
+    const res =  await registerUser(values);
+    console.log(res.data.token)
      try{
          if(res.data.token){
           return console.log('Ok')
