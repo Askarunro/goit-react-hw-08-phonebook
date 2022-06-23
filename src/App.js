@@ -4,6 +4,10 @@ import "./App.css";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import Layout from "./components/Layout";
+
+import { useSelector  } from "react-redux";
+
+
 // import Layout from "./components/Layout";
 // import LoginView from "./views/LoginView";
 
@@ -19,6 +23,10 @@ const LoginView = lazy(() => {
 
   const Register = lazy(() => {
     return import("./views/RegisterView");
+  });
+
+  const UserMenu = lazy(() => {
+    return import("./components/UserMenu");
   });
 
   const Contacts = lazy(() => {
@@ -39,6 +47,7 @@ const LoginView = lazy(() => {
   });
 function App() {
 
+  const token = useSelector((state) => state.token);
 
 
   // const MoviesPage = lazy(() => {
@@ -65,6 +74,7 @@ function App() {
       <Route path="/" element={<Layout />}>
         <Route path="/users/login" element={<LoginView />}></Route>
         <Route path="/users/signup" element={<Register />}></Route>
+        <Route path="/users/current" element={<UserMenu />}></Route>
         <Route path="/contacts" element={<Contacts />}>
           <Route path="id" element={<ContactView />}>
           {/* <Route index element={<ContactForm />}/> */}
