@@ -8,7 +8,7 @@ function Item() {
   const filter = useSelector((state) => state.filter);
   const [deleteContact] = useDeleteContactMutation();
   const {data: contacts } = useGetContactsQuery();
-
+  const randomColor = Math.floor(Math.random()*16777215).toString(16);
  
   return (
     <>
@@ -20,7 +20,8 @@ function Item() {
           
           <li key={contact.name} className={i.item} data-id={contact.name}>
             
-            <NavLink to={`/contacts/${contact.id}`}>
+            <NavLink to={`/contacts/${contact.id}`} className={i.item}>
+            <div ></div>
             <p>{contact.name}:</p>
             <p>{contact.number}</p>
               </NavLink>
