@@ -1,35 +1,33 @@
-import { useState } from 'react';
-// import { useDispatch } from 'react-redux';
-// import { authOperations } from '../redux/auth';
-import { useRegisterUserMutation } from "..//redux/api/usersApi"
-
+import { useState } from "react";
+import { useRegisterUserMutation } from "..//redux/api/usersApi";
+import { TextField, Button, Grid, Alert, Stack, AlertTitle } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const styles = {
   form: {
     width: 320,
   },
   label: {
-    display: 'flex',
-    flexDirection: 'column',
+    display: "flex",
+    flexDirection: "column",
     marginBottom: 15,
   },
 };
 
 export default function RegisterView() {
-  const [registerUser, isSuccess] = useRegisterUserMutation();
-  // console.log(useRegisterUserMutation)
-  // const dispatch = useDispatch();
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [registerUser, isSuccess, isError] = useRegisterUserMutation();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  let navigate = useNavigate();
 
   const handleChange = ({ target: { name, value } }) => {
     switch (name) {
-      case 'name':
+      case "name":
         return setName(value);
-      case 'email':
+      case "email":
         return setEmail(value);
-      case 'password':
+      case "password":
         return setPassword(value);
       default:
         return;
@@ -37,42 +35,49 @@ export default function RegisterView() {
   };
 
   const formSubmitHandler = async (values) => {
-    const res =  await registerUser(values);
-    console.log(res.data.token)
-     try{
-         if(res.data.token){
-          return console.log('Ok')
-         }
-         console.log('problem')
-     }catch{
-         console.log('problem')
-     }
-   };
+    const res = await registerUser(values);
+    try {
+      if (res.data.token) {
+        return navigate("/");
+      }
+      return console.log(isError);
+    } catch {
+      return console.log(isError);
+    }
+  };
 
-   const reset = () => {
-    setName('');
-    setEmail('');
-    setPassword('');
-   }
+  const reset = () => {
+    setName("");
+    setEmail("");
+    setPassword("");
+  };
 
-  const handleSubmit = e => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     formSubmitHandler({ name, email, password });
-    reset()
+    reset();
   };
 
   return (
     <div>
-      <h1>Страница регистрации</h1>
-
       <form onSubmit={handleSubmit} style={styles.form} autoComplete="off">
-        <label style={styles.label}>
-          Имя
+        <Grid container direction="column" justifyContent="space-between" alignItems="center" gap={4}>
+          <h1>Rergister page</h1>
+          <TextField required label="Name" type="text" name="name" value={name} onChange={handleChange} />
+          <TextField required label="Email" type="email" name="email" value={email} onChange={handleChange} />
+          <TextField required label="Password" type="password" name="password" value={password} onChange={handleChange} />
+          <Button type="submit" variant="outlined" color="success" size="large">
+            Ok
+          </Button>
+        </Grid>
+
+        {/* <label style={styles.label}>
+          Name
           <input type="text" name="name" value={name} onChange={handleChange} />
         </label>
-
+       
         <label style={styles.label}>
-          Почта
+          Email
           <input
             type="email"
             name="email"
@@ -80,9 +85,9 @@ export default function RegisterView() {
             onChange={handleChange}
           />
         </label>
-
+        
         <label style={styles.label}>
-          Пароль
+          Password
           <input
             type="password"
             name="password"
@@ -91,8 +96,11 @@ export default function RegisterView() {
           />
         </label>
 
-        <button type="submit">Зарегистрироваться</button>
+        <button type="submit">Ok</button> */}
       </form>
+      {/* {isSuccess && <Alert variant="filled" severity="success">
+        This is a success alert — check it out!
+      </Alert>} */}
     </div>
   );
 }
