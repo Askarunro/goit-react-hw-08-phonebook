@@ -1,14 +1,14 @@
-// import l from "./UserMenu.module.css";
-
+import { Button, Grid } from "@mui/material";
+import { useState } from "react";
 import { searchContact } from "..//../redux/reduce/filter";
 import { useGetUsersQuery, useLogoutUserMutation } from "..//../redux/api/usersApi";
 import { useSelector } from "react-redux";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate} from "react-router-dom";
 
 function UserMenu() {
   const [logoutUser] = useLogoutUserMutation();
-
   const { data: user } = useGetUsersQuery();
+  let navigate = useNavigate()
 
   // const token = useSelector((state) => state.token);
 
@@ -21,15 +21,16 @@ function UserMenu() {
   const handleClick = (e) => {
     logoutClick();
     localStorage.setItem("token", JSON.stringify(""));
+    // navigate(-1)
+    navigate("/users/login", { replace: true });
   };
   return (
-    <div>
-      <img src=""/>
+    <Grid container direction="row" justifyContent="space-between" alignItems="center" gap={4}>
       {user && <h3>{user.email}</h3>}
-      <button type="button" onClick={handleClick}>
+      <Button onClick={handleClick} variant="contained" color="success">
         LogOut
-      </button>
-    </div>
+      </Button>
+    </Grid>
   );
 }
 
