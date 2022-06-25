@@ -15,7 +15,7 @@ const styles = {
 };
 
 export default function RegisterView() {
-  const [registerUser, isSuccess, isError] = useRegisterUserMutation();
+  const [registerUser, isError] = useRegisterUserMutation();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
