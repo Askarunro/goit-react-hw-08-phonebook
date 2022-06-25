@@ -1,11 +1,8 @@
 import c from "./Contacts.module.css";
-import { useSelector } from "react-redux";
 import { useAddContactMutation } from "..//..//redux/api/contactsApi";
-
 import ContactForm from "../ContactForm";
 import Filter from "../Filter";
 import ContactList from "../ContactList/";
-
 import { Grid, Container } from "@mui/material";
 
 function Contacts() {
