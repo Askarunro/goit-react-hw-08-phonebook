@@ -1,28 +1,23 @@
-import { useState, useEffect } from 'react';
-import { useLoginUserMutation } from "..//redux/api/usersApi"
-import { useDispatch } from "react-redux";
-import { myToken } from "..//redux/reduce/filter";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router";
 import ContactForm from "../components/ContactForm";
-import { useDeleteContactMutation, useUpdateMaterialMutation } from "..//redux/api/contactsApi"
-import { NavLink, Outlet, Link, useNavigate  } from "react-router-dom";
-
+import { useUpdateMaterialMutation, useGetContactsQuery } from "..//redux/api/contactsApi";
 
 export default function ContactView() {
   const { id } = useParams();
-  console.log(id)
-    const [deleteContact] = useDeleteContactMutation();
-    const { data: contacts }  = useUpdateMaterialMutation();
-  console.log(contacts)
-  return (
-    <div>
-      gfdsfdgdfgdfgdfgdfg
-     <ContactForm/>
-             <button type="button" 
-            onClick={()=>deleteContact()} >
-              Delete
-            </button>
-            {/* <Outlet/> */}
-    </div>
-  );
+  const [cont, setCont] = useState();
+  const [contacts] = useUpdateMaterialMutation();
+  const { data: allContacts } = useGetContactsQuery();
+
+  useEffect(() => {
+    if (allContacts) {
+      allContacts.find((contact) => {
+        if (contact.id === id) {
+          setCont(contact);
+        }
+      });
+    }
+  }, [allContacts]);
+
+  return <div>{cont && <ContactForm btnTitle={`Update Contact`} contName={cont.name} contNumber={cont.number} addContact={contacts} id={id} />}</div>;
 }
