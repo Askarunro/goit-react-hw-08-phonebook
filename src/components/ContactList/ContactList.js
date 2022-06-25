@@ -3,9 +3,9 @@ import l from "./ContactList.module.css";
 
 function List() {
   return (
-    <ul className={l.list}>
+    <ol className={l.list}>
       <Item />
-    </ul>
+    </ol>
   );
 }
 
