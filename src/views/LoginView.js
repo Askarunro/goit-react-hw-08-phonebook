@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLoginUserMutation } from "..//redux/api/usersApi";
 import { useDispatch } from "react-redux";
-import { myToken } from "..//redux/reduce/filter";
 import { TextField, Button, Grid } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
@@ -19,8 +18,6 @@ const styles = {
 export default function LoginView() {
   let navigate = useNavigate();
 
-  const dispatch = useDispatch();
-
   const [loginUser] = useLoginUserMutation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -28,16 +25,7 @@ export default function LoginView() {
 
   useEffect(() => {
     localStorage.setItem("token", JSON.stringify(token));
-    // dispatch(myToken(token));
   }, [token]);
-
-  // useEffect(() => {
-  //   if (localStorage.getItem("token") !== null) {
-  //     const cont = localStorage.getItem("token");
-  //     const parsedContacts = JSON.parse(cont);
-  //     setToken([...parsedContacts]);
-  //   }
-  // }, token);
 
   const handleChange = ({ target: { name, value } }) => {
     switch (name) {
@@ -55,7 +43,6 @@ export default function LoginView() {
     try {
       if (res.data.token) {
         setToken(res.data.token);
-        // return navigate(-1)
         return navigate("/", { replace: true });
       }
       alert(`Error status ${res.error.status}, message: not found email or password`);
@@ -72,8 +59,6 @@ export default function LoginView() {
   const handleSubmit = (e) => {
     e.preventDefault();
     formSubmitHandler({ email, password });
-    // dispatch(myToken(token))
-    // dispatch(myToken(''))
     reset();
   };
 
@@ -88,27 +73,6 @@ export default function LoginView() {
             Ok
           </Button>
         </Grid>
-        {/* <label style={styles.label}>
-          Почта
-          <input
-            type="email"
-            name="email"
-            value={email}
-            onChange={handleChange}
-          />
-        </label>
-
-        <label style={styles.label}>
-          Пароль
-          <input
-            type="password"
-            name="password"
-            value={password}
-            onChange={handleChange}
-          />
-        </label>
-
-        <button type="submit">Войти</button> */}
       </form>
     </div>
   );
