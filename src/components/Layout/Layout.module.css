@@ -23,6 +23,15 @@
   transition: all 0.3s;
 }
 
+.nav:hover,
+.nav:focus {
+  text-decoration: none;
+}
+
+.nav[aria-current] {
+  border-bottom: 1px solid white;
+}
+
 .link:hover,
 .link:focus {
   text-decoration: none;
@@ -40,8 +49,11 @@
 
 .paddingTop {
   padding-top: 100px;
+  position: relative;
+  z-index: 0;
 }
 
 .boxColor {
+  z-index: 10;
   background-image: linear-gradient(180deg, #0b1628 15.72%, #21eedc 100%);
 }
