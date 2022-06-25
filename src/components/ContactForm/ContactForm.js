@@ -1,13 +1,11 @@
 import f from "./ContactForm.module.css";
-import { useState, useEffect } from "react";
-import {useAddContactMutation, useGetContactsQuery} from "..//../redux/api/contactsApi"
+import { useState } from "react";
+import { useGetContactsQuery } from "..//../redux/api/contactsApi";
 
-function Form() {
-  const [name, setName] = useState("");
-  const [number, setNumber] = useState("");
-
-  const {data: contacts} = useGetContactsQuery();
-  const [addContact] = useAddContactMutation();
+function Form({ btnTitle, contName = "", contNumber = "", addContact, id }) {
+  const [name, setName] = useState(contName);
+  const [number, setNumber] = useState(contNumber);
+  const { data: contacts } = useGetContactsQuery();
 
   const onChangeInput = (e) => {
     const { name, value } = e.currentTarget;
@@ -25,15 +23,17 @@ function Form() {
   const formSubmitHandler = async (values) => {
     let exist = false;
     if (contacts.length >= 0) {
-    contacts.forEach((contact) => {
+      contacts.forEach((contact) => {
         if (contact.name.toLowerCase() === values.name.toLowerCase()) {
           exist = true;
         }
       });
     }
     if (!exist) {
-      await addContact(values);
-      console.log(values)
+      return await addContact(values);
+    }
+    if (exist && id) {
+      return await addContact(values);
     } else alert(`${values.name} is already i contacts`);
   };
 
@@ -44,7 +44,7 @@ function Form() {
 
   const onSubmitForm = (e) => {
     e.preventDefault();
-    formSubmitHandler({ name, number });
+    formSubmitHandler({ name, number, id });
     reset();
   };
 
@@ -75,7 +75,7 @@ function Form() {
         />
       </label>
 
-      <button type="submit">Add contact</button>
+      <button type="submit">{btnTitle}</button>
     </form>
   );
 }
