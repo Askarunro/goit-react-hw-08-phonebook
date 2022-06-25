@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useRegisterUserMutation } from "..//redux/api/usersApi";
-import { TextField, Button, Grid, Alert, Stack, AlertTitle } from "@mui/material";
+import { TextField, Button, Grid } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 const styles = {
@@ -70,37 +70,7 @@ export default function RegisterView() {
             Ok
           </Button>
         </Grid>
-
-        {/* <label style={styles.label}>
-          Name
-          <input type="text" name="name" value={name} onChange={handleChange} />
-        </label>
-       
-        <label style={styles.label}>
-          Email
-          <input
-            type="email"
-            name="email"
-            value={email}
-            onChange={handleChange}
-          />
-        </label>
-        
-        <label style={styles.label}>
-          Password
-          <input
-            type="password"
-            name="password"
-            value={password}
-            onChange={handleChange}
-          />
-        </label>
-
-        <button type="submit">Ok</button> */}
       </form>
-      {/* {isSuccess && <Alert variant="filled" severity="success">
-        This is a success alert — check it out!
-      </Alert>} */}
     </div>
   );
 }
