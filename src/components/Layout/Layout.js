@@ -1,22 +1,17 @@
 import { Outlet } from "react-router";
-import { Link, NavLink } from "react-router-dom";
-import backImg from "./back.png";
+import { NavLink } from "react-router-dom";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
-import { useGetUsersQuery } from "..//../redux/api/usersApi";
-import {Login, AppRegistration} from '@mui/icons-material';
+import { Login, AppRegistration, Contacts } from "@mui/icons-material";
 import { Button, Grid, Container } from "@mui/material";
 
 import l from "./Layout.module.css";
 import UserMenu from "..//UserMenu";
 
 const Layout = () => {
-  // const { data: user } = useGetUsersQuery();
   const token = useSelector((state) => state.token);
 
-useEffect(()=>{
-
-},[])
+  useEffect(() => {}, []);
 
   return (
     <>
@@ -26,12 +21,14 @@ useEffect(()=>{
             <Grid container direction="row" justifyContent="end" alignItems="center" gap={4}>
               <Button variant="contained" color="success">
                 <NavLink to="/users/signup" className={l.nav}>
-                  <AppRegistration/>Register
+                  <AppRegistration />
+                  Register
                 </NavLink>
               </Button>
               <Button variant="contained" color="success">
                 <NavLink to="/users/login" className={l.nav}>
-                  <Login/>LogIn
+                  <Login />
+                  LogIn
                 </NavLink>
               </Button>
             </Grid>
@@ -39,17 +36,13 @@ useEffect(()=>{
 
           {token !== "" && (
             <Grid container direction="row" justifyContent="space-between" alignItems="center" gap={4}>
-              <NavLink to="/contacts" className={l.link}>
+              <NavLink to="/contacts" className={l.nav}>
+                <Contacts />
                 Your contacts
               </NavLink>
               <div className={l.link}>
-              <UserMenu />
-
-              </div>
-
-              {/* <NavLink to="/users/current" className={l.link}>
                 <UserMenu />
-              </NavLink> */}
+              </div>
             </Grid>
           )}
         </Grid>
