@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import Layout from "./components/Layout";
 import { useSelector } from "react-redux";
+import PrivateRoute from './components/PrivateRoute'
 
 const LoginView = lazy(() => {
   return import("./views/LoginView");
@@ -30,8 +31,9 @@ function App() {
         <Route path="/" element={<Layout />}>
           <Route path="/users/login" element={token ? <Navigate replace to="/contacts" /> : <LoginView />} />
           <Route path="/users/signup" element={token ? <Navigate replace to="/contacts" /> : <Register />} />
-          <Route path="/contacts" element={token === "" ? <Navigate replace to="/" /> : <Contacts />} />
-          <Route path="contacts/:id" element={token === "" ? <Navigate replace to="/" /> : <ContactView />} />
+          <Route path="/contacts" element={<PrivateRoute token={token}><Contacts/></PrivateRoute>}/>
+          {/* <Route path="/contacts" element={token === "" ? <Navigate replace to="/" /> : <Contacts />} />*/}
+          <Route path="contacts/:id" element={token === "" ? <Navigate replace to="/" /> : <ContactView />} /> 
           <Route
             path="*"
             element={
