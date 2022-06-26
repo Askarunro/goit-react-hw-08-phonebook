@@ -1,5 +1,5 @@
 import { Outlet } from "react-router";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Login, AppRegistration, Contacts } from "@mui/icons-material";
@@ -9,9 +9,14 @@ import l from "./Layout.module.css";
 import UserMenu from "..//UserMenu";
 
 const Layout = () => {
+  const navigate = useNavigate()
   const token = useSelector((state) => state.token);
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    if(!token || token ===''){
+      navigate("/", { replace: true });
+    }
+  }, []);
 
   return (
     <>
@@ -34,7 +39,7 @@ const Layout = () => {
             </Grid>
           )}
 
-          {token !== "" && (
+          {token && (
             <Grid container direction="row" justifyContent="space-between" alignItems="center" gap={4}>
               <NavLink to="/contacts" className={l.nav}>
                 <Contacts />
