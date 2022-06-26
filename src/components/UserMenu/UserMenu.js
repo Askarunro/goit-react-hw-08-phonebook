@@ -11,15 +11,19 @@ function UserMenu() {
 
   const logoutClick = async () => {
     const res = await logoutUser();
+    
     try {
+    return 
+
     } catch {}
   };
 
   const handleClick = (e) => {
-    logoutClick();
     localStorage.setItem("token", JSON.stringify(""));
-    navigate("/users/login", { replace: true });
+    logoutClick();
+    navigate("/", { replace: true });
   };
+
   return (
     <Grid container direction="row" justifyContent="space-between" alignItems="center" gap={4}>
       {user && <h3>{user.email}</h3>}
