@@ -2,7 +2,7 @@ import f from "./ContactForm.module.css";
 import { useState } from "react";
 import { useGetContactsQuery } from "..//../redux/api/contactsApi";
 
-function Form({ btnTitle, contName = "", contNumber = "", addContact, id }) {
+function Form({ btnTitle, contName = "", contNumber = "", addContact, id , updateList}) {
   const [name, setName] = useState(contName);
   const [number, setNumber] = useState(contNumber);
   const { data: contacts } = useGetContactsQuery();
@@ -45,6 +45,7 @@ function Form({ btnTitle, contName = "", contNumber = "", addContact, id }) {
   const onSubmitForm = (e) => {
     e.preventDefault();
     formSubmitHandler({ name, number, id });
+    updateList()
     reset();
   };
 
