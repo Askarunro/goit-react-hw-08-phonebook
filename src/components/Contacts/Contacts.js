@@ -4,9 +4,16 @@ import ContactForm from "../ContactForm";
 import Filter from "../Filter";
 import ContactList from "../ContactList/";
 import { Grid, Container } from "@mui/material";
+import { useState } from "react";
 
 function Contacts() {
+  const [state, setState] = useState(false);
   const [addContact] = useAddContactMutation();
+
+  const updateList = () => {
+    setState(!state);
+  };
+
   return (
     <Container>
       <h1>Phonebook</h1>
@@ -14,11 +21,11 @@ function Contacts() {
         <Grid>
           <h2>Contacts list</h2>
           <Filter />
-          <ContactList />
+          <ContactList state={state} />
         </Grid>
         <Grid>
           <h2 className={c.title}>New contact</h2>
-          <ContactForm btnTitle={`Add contact`} addContact={addContact}/>
+          <ContactForm btnTitle={`Add contact`} addContact={addContact} updateList={updateList} />
         </Grid>
       </Grid>
     </Container>
