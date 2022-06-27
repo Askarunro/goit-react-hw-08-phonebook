@@ -1,11 +1,11 @@
 import Item from "../ContactListItem";
 import l from "./ContactList.module.css";
 
-function List() {
+function List({ state }) {
   return (
-    <ol className={l.list}>
-      <Item />
-    </ol>
+    <ul className={l.list}>
+      <Item state={state} />
+    </ul>
   );
 }
 
