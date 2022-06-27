@@ -4,11 +4,21 @@ import { NavLink } from "react-router-dom";
 import { useDeleteContactMutation, useGetContactsQuery } from "..//../redux/api/contactsApi";
 import { Button, ListItem } from "@mui/material";
 import { DeleteForever } from "@mui/icons-material";
+import { useEffect } from "react";
 
-function Item() {
+function Item(state) {
   const filter = useSelector((state) => state.filter);
   const [deleteContact] = useDeleteContactMutation();
-  const { data: contacts } = useGetContactsQuery();
+  const { data: contacts, refetch } = useGetContactsQuery();
+
+  useEffect(() => {
+    refetch();
+  }, [state]);
+
+  async function handleSubmit(id) {
+    await deleteContact(id);
+    await refetch();
+  }
 
   return (
     <>
@@ -21,7 +31,7 @@ function Item() {
                 <p>name: {contact.name}:</p>
                 <p>number: {contact.number}</p>
               </NavLink>
-              <Button type="button" onClick={() => deleteContact(contact.id)} className={i.btn} variant="outlined" color="error" size="large">
+              <Button type="button" onClick={() => handleSubmit(contact.id)} className={i.btn} variant="outlined" color="error" size="large">
                 <DeleteForever />
               </Button>
             </ListItem>
