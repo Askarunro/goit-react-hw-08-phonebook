@@ -1,6 +1,6 @@
 import { Outlet } from "react-router";
 import { NavLink, useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Login, AppRegistration, Contacts } from "@mui/icons-material";
 import { Button, Grid, Container } from "@mui/material";
@@ -10,13 +10,12 @@ import UserMenu from "..//UserMenu";
 
 const Layout = () => {
   const navigate = useNavigate()
+  const [tokenNew, setToken] = useState("");
   const token = useSelector((state) => state.token);
 
-  // useEffect(() => {
-  //   if(!token || token ===''){
-  //     navigate("/", { replace: true });
-  //   }
-  // }, []);
+  useEffect(() => {
+    setToken(token)
+  }, []);
 
   return (
     <>
