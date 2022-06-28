@@ -12,11 +12,11 @@ const Layout = () => {
   const navigate = useNavigate()
   const token = useSelector((state) => state.token);
 
-  useEffect(() => {
-    if(!token || token ===''){
-      navigate("/", { replace: true });
-    }
-  }, []);
+  // useEffect(() => {
+  //   if(!token || token ===''){
+  //     navigate("/", { replace: true });
+  //   }
+  // }, []);
 
   return (
     <>

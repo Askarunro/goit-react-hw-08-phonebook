@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRegisterUserMutation } from "..//redux/api/usersApi";
 import { TextField, Button, Grid } from "@mui/material";
 import { useNavigate } from "react-router-dom";
@@ -20,6 +20,11 @@ export default function RegisterView() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   let navigate = useNavigate();
+  const [token, setToken] = useState("");
+
+  useEffect(() => {
+    localStorage.setItem("token", JSON.stringify(token));
+  }, [token]);
 
   const handleChange = ({ target: { name, value } }) => {
     switch (name) {
@@ -38,7 +43,8 @@ export default function RegisterView() {
     const res = await registerUser(values);
     try {
       if (res.data.token) {
-        return navigate("/");
+        setToken(res.data.token);
+        return navigate("/contacts");
       }
       return console.log(isError);
     } catch {
