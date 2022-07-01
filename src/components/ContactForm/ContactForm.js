@@ -1,52 +1,57 @@
-import f from "./ContactForm.module.css";
-import { useState } from "react";
-import { useGetContactsQuery } from "..//../redux/api/contactsApi";
+import f from './ContactForm.module.css';
+import { useState } from 'react';
+import { useAddContactMutation } from 'redux/contacts';
+import { useGetContactsQuery } from 'redux/contacts';
 
-function Form({ btnTitle, contName = "", contNumber = "", addContact, id , updateList}) {
-  const [name, setName] = useState(contName);
-  const [number, setNumber] = useState(contNumber);
-  const { data: contacts } = useGetContactsQuery();
+export default function Form() {
+  const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [addContact, { isLoading }] = useAddContactMutation();
+  const { data } = useGetContactsQuery();
 
-  const onChangeInput = (e) => {
-    const { name, value } = e.currentTarget;
+  const onChangeInput = (event) => {
+    const { name, value } = event.currentTarget;
 
     switch (name) {
-      case "name":
+      case 'name':
         setName(value);
         break;
-      case "number":
-        setNumber(value);
+
+      case 'phone':
+        setPhone(value);
         break;
-    }
-  };
 
-  const formSubmitHandler = async (values) => {
-    let exist = false;
-    if (contacts.length >= 0) {
-      contacts.forEach((contact) => {
-        if (contact.name.toLowerCase() === values.name.toLowerCase()) {
-          exist = true;
-        }
-      });
+      default:
+        return;
     }
-    if (!exist) {
-      return await addContact(values);
-    }
-    if (exist && id) {
-      return await addContact(values);
-    } else alert(`${values.name} is already i contacts`);
-  };
-
-  const reset = () => {
-    setName("");
-    setNumber("");
   };
 
   const onSubmitForm = (e) => {
     e.preventDefault();
-    formSubmitHandler({ name, number, id });
-    updateList()
+
+    const newContact = {
+      name,
+      number: phone,
+    };
+    onAddContact(newContact);
     reset();
+  };
+
+  const onAddContact = (contact) => {
+    const nameToFind = data.find(
+      (contact) => contact.name.toLowerCase() === name.toLowerCase()
+    );
+
+    if (nameToFind) {
+      alert(`⚡${name} is already in contacts!`);
+    } else {
+      addContact(contact);
+    }
+  };
+
+  const reset = () => {
+    setName('');
+    setPhone('');
   };
 
   return (
@@ -68,7 +73,7 @@ function Form({ btnTitle, contName = "", contNumber = "", addContact, id , updat
         <input
           type="tel"
           name="number"
-          value={number}
+          value={phone}
           pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
           title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
           required
@@ -76,9 +81,7 @@ function Form({ btnTitle, contName = "", contNumber = "", addContact, id , updat
         />
       </label>
 
-      <button type="submit">{btnTitle}</button>
+      <button type="submit">{isLoading ? 'Adding...' : 'Add contact'}</button>
     </form>
   );
 }
-
-export default Form;
