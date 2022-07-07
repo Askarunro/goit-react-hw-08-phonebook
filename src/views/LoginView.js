@@ -15,7 +15,7 @@ const styles = {
 };
 
 export default function LoginView() {
-  let navigate = useNavigate();
+  const navigate = useNavigate();
 
   const [loginUser] = useLoginUserMutation();
   const [email, setEmail] = useState("");
@@ -24,6 +24,10 @@ export default function LoginView() {
 
   useEffect(() => {
     localStorage.setItem("token", JSON.stringify(token));
+    if(token && token!==''){
+      console.log('test')
+      navigate("/contacts", { replace: true });
+    }
   }, [token]);
 
   const handleChange = ({ target: { name, value } }) => {
@@ -39,14 +43,23 @@ export default function LoginView() {
 
   const formSubmitHandler = async (values) => {
     const res = await loginUser(values);
+    if(res){
+      setToken(res.data.token);
+// console.log('ggdsgdsgsd')
+//       console.log(token)
+      // navigate("../login", { replace: true });
+    }
+     
     try {
-      if (res.data.token) {
-        setToken(res.data.token);
-        return navigate("/", { replace: true });
-      }
-      alert(`Error status ${res.error.status}, message: not found email or password`);
+    
+      // if (res.data.token) {
+      //   await setToken(res.data.token);
+      //   navigate("/contacts", { replace: true });
+      // }
+      // alert(`Error status ${res.error}, message: not found email or password`);
     } catch {
-      alert(`Error status ${res.error.status}, message: not found email or password`);
+      // alert(`Error status ${res.error}, message: not found email or password`);
+      alert('gsdgdsgsdgs')
     }
   };
 
