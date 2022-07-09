@@ -6,6 +6,7 @@ const axiosBaseQuery =
   async ({ url, method, data, params }) => {
     axios.interceptors.request.use(
       (config) => {
+
         config.headers["Authorization"] = `Bearer ${token}`;
         return config;
       },
@@ -14,7 +15,6 @@ const axiosBaseQuery =
       }
     );
     const token = JSON.parse(localStorage.getItem("token")) || "";
-
     try {
       const result = await axios({ url: baseUrl + url, method, data, params });
       return { data: result.data };
@@ -34,17 +34,23 @@ export const contactsApi = createApi({
   baseQuery: axiosBaseQuery({
     baseUrl: "https://connections-api.herokuapp.com/",
   }),
+  tagTypes: ['Contacts'],
   endpoints(build) {
     return {
-      getContacts: build.query({ query: () => ({ url: "contacts", method: "get" }) }),
+      getContacts: build.query({ query: () => ({ url: "contacts", method: "get" }),
+      providesTags: ['Contacts'], 
+    }),
       addContact: build.mutation({
         query: (values) => ({ url: "contacts", method: "post", data: values }),
+        invalidatesTags: ['Contacts'],
       }),
       deleteContact: build.mutation({
         query: (id) => ({ url: `contacts/${id}`, method: "delete" }),
+        invalidatesTags: ['Contacts'],
       }),
       updateMaterial: build.mutation({
         query: ({name, number, id}) => ({ url: `contacts/${id}`, method: "patch", data: {name, number} }),
+        invalidatesTags: ['Contacts'],
       }),
     };
   },
