@@ -17,6 +17,7 @@ function Form({ btnTitle, contName = "", contNumber = "", addContact, id , updat
       case "number":
         setNumber(value);
         break;
+        default: return;
     }
   };
 
