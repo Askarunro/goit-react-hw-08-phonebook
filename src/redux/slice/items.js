@@ -1,34 +1,26 @@
-// import { createSlice } from '@reduxjs/toolkit'
-// import { PayloadAction } from '@reduxjs/toolkit'
-// import { User } from '..//api/usersApi'
-
-// const slice = createSlice({
-//   name: 'auth',
-//   initialState: { user: null, token: null } ,
-//   reducers: {
-//     setCredentials: (
-//       state,
-//       { payload: { user, token } }
-//     ) => {
-//       state.user = user
-//       state.token = token
-//     },
-//   },
-// })
-
-
 import { createSlice } from "@reduxjs/toolkit";
+import {authApi} from '../api/usersApi'
 
 export const authSlice = createSlice({
   name: "auth",
   initialState:{
     user: { name: null, email: null },
     token: localStorage.getItem("token") || "",
-  isLoggedIn: false,
+    isLoggedIn: false,
   },
-  initialState: {
-    token: localStorage.getItem("token") || "",
-  },
+  // initialState: {
+  //   token: localStorage.getItem("token") || "",
+  // },
+
+  // reducers: {
+  //   login(state, action){
+  //     state.isLoggedIn= true;
+  //     state.token= localStorage.getItem("token") || "";
+  //   },
+  //   logout(state) {
+  //     state.token = "";
+  //     state.isLoggedIn=false;
+  //   },
   reducers: {
     logout(state) {
       state.token = "";
@@ -37,7 +29,7 @@ export const authSlice = createSlice({
   extraReducers: (build) => {
     console.log(build)
     build.addMatcher(
-      // authApi.endpoints.login.matchFulfilled,
+      authApi.endpoints.login.matchFulfilled,
       (state, { payload }) => {
         state.token = payload.token;
       }

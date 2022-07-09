@@ -8,3 +8,4 @@ const PrivateRoute = ({ token, redirectPath = "/", children }) => {
 };
 
 export default PrivateRoute;
+
