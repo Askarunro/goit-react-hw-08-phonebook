@@ -11,7 +11,7 @@ function UserMenu() {
 
   const logoutClick = async () => {
     const res = await logoutUser();
-    
+    // await navigate("/users/login", { replace: true });
     try {
     return 
 
