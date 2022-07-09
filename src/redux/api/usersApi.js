@@ -80,19 +80,25 @@ const axiosBaseQuery =
     reducerPath: "usersApi",
   baseQuery: axiosBaseQuery({
     baseUrl: 'https://connections-api.herokuapp.com/',
+    tagTypes: ['User'],
   }),
   endpoints(build) {
     return {
-      getUsers: build.query({ query: () => ({ url: 'users/current', method: 'get' }) }),
+      getUsers: build.query({
+        query: () => ({ url: 'users/current', method: 'get' }),
+        providesTags: ['Users'],
+     }),
       loginUser: build.mutation({
         query: (values) => ({ url: 'users/login', method: 'post', data:values }),
-
+        invalidatesTags: ['Users'],
       }),
       logoutUser: build.mutation({
         query: (values) => ({ url: `users/logout`, method: 'post', data: values }),
+        invalidatesTags: ['Users'],
       }),
       registerUser: build.mutation({
         query: (values) => ({ url: `users/signup`, method: 'post', data: values}),
+        invalidatesTags: ['Users'],
       }),
     }
   },
