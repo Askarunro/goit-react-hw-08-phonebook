@@ -3,6 +3,14 @@ import { useLoginUserMutation } from "..//redux/api/usersApi";
 import { TextField, Button, Grid } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
+import { myToken } from "..//redux/reduce/filter";
+
+
+
+import { useDispatch } from 'react-redux';
+import { authOperations } from '../redux/auth';
+
+
 const styles = {
   form: {
     width: 320,
@@ -15,6 +23,8 @@ const styles = {
 };
 
 export default function LoginView() {
+
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const [loginUser] = useLoginUserMutation();
@@ -25,7 +35,7 @@ export default function LoginView() {
   useEffect(() => {
     localStorage.setItem("token", JSON.stringify(token));
     if(token && token!==''){
-      console.log('test')
+      dispatch(myToken(token));
       navigate("/contacts", { replace: true });
     }
   }, [token]);
@@ -73,6 +83,35 @@ export default function LoginView() {
     formSubmitHandler({ email, password });
     reset();
   };
+
+
+
+
+
+
+// const dispatch = useDispatch();
+//   const [email, setEmail] = useState('');
+//   const [password, setPassword] = useState('');
+
+//   const handleChange = ({ target: { name, value } }) => {
+//     switch (name) {
+//       case 'email':
+//         return setEmail(value);
+//       case 'password':
+//         return setPassword(value);
+//       default:
+//         return;
+//     }
+//   };
+
+//   const handleSubmit = e => {
+//     e.preventDefault();
+//     dispatch(authOperations.logIn({ email, password }));
+//     setEmail('');
+//     setPassword('');
+//   };
+
+
 
   return (
     <div>
