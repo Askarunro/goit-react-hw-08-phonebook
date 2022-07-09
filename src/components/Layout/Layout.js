@@ -13,9 +13,9 @@ const Layout = () => {
   const [tokenNew, setToken] = useState("");
   const token = useSelector((state) => state.token);
 
-  useEffect(() => {
-    setToken(token)
-  }, []);
+  // useEffect(() => {
+  //   setToken(token)
+  // }, []);
 
   return (
     <>
