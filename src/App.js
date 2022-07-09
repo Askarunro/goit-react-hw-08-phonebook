@@ -24,7 +24,7 @@ const ContactView = lazy(() => {
 function App() {
   const shouldRedirect = true;
   const token = useSelector((state) => state.token);
-  console.log(token);
+
   return (
     <Suspense fallback={<div>Loading</div>}>
       <Routes>
@@ -32,7 +32,6 @@ function App() {
           <Route path="/users/login" element={token ? <Navigate replace to="/contacts" /> : <LoginView />} />
           <Route path="/users/signup" element={token ? <Navigate replace to="/contacts" /> : <Register />} />
           <Route path="/contacts" element={<PrivateRoute token={token}><Contacts/></PrivateRoute>}/>
-          {/* <Route path="/contacts" element={token === "" ? <Navigate replace to="/" /> : <Contacts />} />*/}
           <Route path="contacts/:id" element={token === "" ? <Navigate replace to="/" /> : <ContactView />} /> 
           <Route
             path="*"
@@ -50,3 +49,44 @@ function App() {
 }
 
 export default App;
+
+
+
+
+
+// function App() {
+// const isLoggedIn = useSelector(authSelectors.getIsLoggedIn);
+
+
+// // const dispatch = useDispatch();
+// //   const isFetchingCurrentUser = useSelector(authSelectors.getIsFetchingCurrent);
+// // console.log(isFetchingCurrentUser)
+// // useEffect(() => {
+// //   dispatch(authOperations.fetchCurrentUser());
+// // }, [dispatch]);
+
+// return (
+//   <Suspense fallback={<div>Loading</div>}>
+//     <Routes>
+//       <Route path="/" element={<Layout />}>
+//         <Route path="/users/login" element={isLoggedIn ? <Navigate replace to="/contacts" /> : <LoginView />} />
+//         <Route path="/users/signup" element={isLoggedIn ? <Navigate replace to="/contacts" /> : <Register />} />
+//         <Route path="/contacts" element={<PrivateRoute token={isLoggedIn}><Contacts/></PrivateRoute>}/>
+//         {/* <Route path="/contacts" element={token === "" ? <Navigate replace to="/" /> : <Contacts />} />*/}
+//         <Route path="contacts/:id" element={isLoggedIn ? <Navigate replace to="/" /> : <ContactView />} /> 
+//         <Route
+//           path="*"
+//           element={
+//             <div>
+//               <h2>Oops we have a problem</h2>
+//               <h3>Pages not found</h3>
+//             </div>
+//           }
+//         ></Route>
+//       </Route>
+//     </Routes>
+//   </Suspense>
+// );
+// }
+
+// export default App;
