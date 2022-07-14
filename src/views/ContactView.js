@@ -1,33 +1,44 @@
-import { useState, useEffect } from "react";
-import { useParams } from "react-router";
-import ContactForm from "../components/ContactForm";
-import { useUpdateMaterialMutation, useGetContactsQuery } from "..//redux/api/contactsApi";
+import { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import Container from '../components/Container';
+import styles from './ContactView.module.css'
 
-import { useSelector, useDispatch } from 'react-redux';
+import contactsOperations  from '../redux/contacts/contacts-operations';
+import ContactForm from '..//components/ContactForm/ContactForm';
+import ContactFilter from '..//components/ContactFilter/ContactFilter';
+import ContactList from '..//components/ContactList/ContactList';
 
-
-
-export default function ContactView() {
-  // const { id } = useParams();
-  // const [cont, setCont] = useState();
-  // const [contacts] = useUpdateMaterialMutation();
-  // const { data: allContacts } = useGetContactsQuery();
-
-  // useEffect(() => {
-  //   if (allContacts) {
-  //     allContacts.find((contact) => {
-  //       if (contact.id === id) {
-  //         setCont(contact);
-  //       }
-  //     });
-  //   }
-  // }, [allContacts]);
-
-  // return <div>{cont && <ContactForm btnTitle={`Update Contact`} contName={cont.name} contNumber={cont.number} addContact={contacts} id={id} />}</div>;
+/*
+const barStyles = {
+  display: 'flex',
+  alignItems: 'flex-end',
+  marginBottom: 20,
+};
+*/
 
 
 
-
+export default function ContctsView(params) {
+  const dispatch = useDispatch();
   
-return <></>
+  useEffect(() => {
+    function fetchContact(){
+       dispatch(contactsOperations.fetchContacts())
+ }
+ fetchContact()
+ }, [dispatch]);
+
+  return (
+    <Container>
+      <main className={styles.MainBox} >
+        <h1>Книга контактів</h1>
+        <ContactForm/>
+        <h2>Контакти</h2>
+        <ContactFilter />
+       <ContactList/>
+       </main>
+
+
+    </Container>
+  );
 }

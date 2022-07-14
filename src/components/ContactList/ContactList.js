@@ -1,29 +1,36 @@
-import Item from "../ContactListItem";
-import l from "./ContactList.module.css";
-
-
+import React from "react";
+import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
+import ContactListItem from '../ContactListItem/ContactListItem';
 
-
-// function List({ state }) {
-//   return (
-//     <ul className={l.list}>
-//       <Item state={state} />
-//     </ul>
-//   );
-// }
-
-function List() {
+const ContactList = () => {
   const filters = useSelector(state =>state.filter);
   const contacts = useSelector(state=>state.contacts.items);
   const normalizeFilter = filters.toLowerCase();
 const filterContacts = contacts.filter(contact => contact.name.toLowerCase().includes(normalizeFilter));
-console.log(contacts)
-  return (
-    <ul className={l.list}>
-      <Item />
-    </ul>
-  );
-}
 
-export default List;
+return (
+    
+    <div>
+      <ul>
+        {filterContacts.map(({id,name,number}) => (
+          <ContactListItem
+            key={id}
+            id={id}
+            name={name}
+            number={number}
+          />))}
+      </ul>
+    </div>
+    
+  );
+  
+};
+
+export default ContactList;
+
+//========================== propTypes ===================
+ ContactList.propTypes = {
+   contacts: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.string)),
+   
+ };

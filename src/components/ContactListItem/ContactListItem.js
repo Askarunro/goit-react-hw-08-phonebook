@@ -1,78 +1,59 @@
-import i from "./ContactListItem.module.css";
-// import { useSelector } from "react-redux";
-import { NavLink } from "react-router-dom";
-import { useDeleteContactMutation, useGetContactsQuery } from "..//../redux/api/contactsApi";
-import { Button, ListItem } from "@mui/material";
-import { DeleteForever } from "@mui/icons-material";
-import { useEffect } from "react";
+import React from 'react';
+import PropTypes from 'prop-types';
+import { useDispatch, } from 'react-redux';
+import contactsOperations from '../../redux/contacts/contacts-operations'
+import Button from '@mui/material/Button';
+import ListItem from '@mui/material/ListItem';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import IconButton from '@mui/material/IconButton';
+import ListItemText from '@mui/material/ListItemText';
+import Avatar from '@mui/material/Avatar';
+import DeleteIcon from '@mui/icons-material/Delete';
+import FolderIcon from '@mui/icons-material/Folder';
+import PhoneIcon from '@mui/icons-material/Phone';
 
 
-import { useSelector, useDispatch } from 'react-redux';
-import { contactsOperations, contactsSelectors, changeFilter } from '../../redux/contacts';
 
+const ContactListItem = ({ name, id, number }) => {
+    const dispatch = useDispatch();
+    const onDelete = id => dispatch(contactsOperations.deleteContacts(id)); 
+    const [secondary, setSecondary] = React.useState(false);
 
-function Item(state) {
-// const token = useSelector((state) => state.token);
+  
+    return (
+      <ListItem  key={id}
+      secondaryAction={
+        <IconButton edge="end" aria-label="delete" onClick={() => onDelete(id)}>
+          <DeleteIcon  variant="contained" color="success"  type='submit' />
+        </IconButton>
+      }
+    >
+      <ListItemAvatar>
+        <Avatar>
+          <PhoneIcon/>
+        </Avatar>
+      </ListItemAvatar>
+      <ListItemText
+        primary= {name}
+       
+        secondary={secondary ? 'Secondary text' : null}
+      />
+       <ListItemText
+        primary= {number}
+       
+        secondary={secondary ? 'Secondary text' : null}
+      />
+    </ListItem>
+    )
+      
+      
+    
+  };
 
-//   const filter = useSelector((state) => state.filter);
-//   const [deleteContact] = useDeleteContactMutation();
-//   const { data: contacts, refetch } = useGetContactsQuery();
+export default ContactListItem;
 
-// console.log(contacts)
-
-//   useEffect(() => {
-//     refetch();
-//   }, [state]);
-
-//   async function handleSubmit(id) {
-//     await deleteContact(id);
-//     await refetch();
-//   }
-
-// return (
-//   <>
-//     {contacts &&
-//       contacts
-//         .filter((option) => option.name.toLowerCase().includes(filter.toLowerCase()))
-//         .map((contact) => (
-//           <ListItem key={contact.name} className={i.item} data-id={contact.name}>
-//             <NavLink to={`/contacts/${contact.id}`} className={i.link}>
-//               <p>name: {contact.name}:</p>
-//               <p>number: {contact.number}</p>
-//             </NavLink>
-//             <Button type="button" onClick={() => handleSubmit(contact.id)} className={i.btn} variant="outlined" color="error" size="large">
-//               <DeleteForever />
-//             </Button>
-//           </ListItem>
-//         ))}
-//   </>
-// );
-
-const dispatch = useDispatch();
-const contacts = useSelector(state=>state.contacts.items);
-
-
-const filter = useSelector((state) => state.filter);
-console.log(filter)
-
-  return (
-    <>
-      {contacts &&
-        contacts
-          .filter((option) => option.name.toLowerCase().includes(filter.toLowerCase()))
-          .map((contact) => (
-            <ListItem key={contact.name} className={i.item} data-id={contact.name}>
-              <NavLink to={`/contacts/${contact.id}`} className={i.link}>
-                <p>name: {contact.name}:</p>
-                <p>number: {contact.number}</p>
-              </NavLink>
-              <Button type="button" onClick={e => dispatch(changeFilter(e.target.value))} className={i.btn} variant="outlined" color="error" size="large">
-                <DeleteForever />
-              </Button>
-            </ListItem>
-          ))}
-    </>
-  );
-}
-
-export default Item;
+ ContactListItem.propTypes = {
+   name: PropTypes.string,
+   number: PropTypes.string,
+  
+ };

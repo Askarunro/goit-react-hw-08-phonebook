@@ -1,102 +1,66 @@
-import "./App.css";
-import { Routes, Route, Navigate } from "react-router-dom";
-// import { lazy, Suspense } from "react";
-import Layout from "./components/Layout";
-// import { useSelector } from "react-redux";
-import PrivateRoute from './components/PrivateRoute'
-import PublicRoute  from './components/PublicRoute'
-
-
-import { authOperations, authSelectors } from './redux/auth';
 import { useEffect, Suspense, lazy } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {contactsOperations} from './redux/contacts/'
+import { Route, Routes } from 'react-router-dom';
+import AppBar from './components/AppBar/AppBar';
 
-const LoginView = lazy(() => {
-  return import("./views/LoginView");
-});
+// import ContactsView from './views/ContactView';
+// import HomeView from './views/HomeView';
+// import RegisterView from './views/RegisterView';
+// import LoginView from './views/LoginView';
 
-const Register = lazy(() => {
-  return import("./views/RegisterView");
-});
+import Container from './components/Container';
+import { authOperations, authSelectors } from './redux/auth';
+import PrivateRoute from './components/PrivateRoute/PrivateRoute';
+import PublicRoute from './components/PublicRoure/PublicRoute';
 
-const Contacts = lazy(() => {
-  return import("./components/Contacts");
-});
+const HomeView = lazy(() => {return import('./views/HomeView')});
+const RegisterView = lazy(() => {return import('./views/RegisterView')});
+const LoginView = lazy(() => {return import('./views/LoginView')});
+const ContactsView = lazy(() => {return import('./views/ContactView')});
 
-const ContactView = lazy(() => {
-  return import("./views/ContactView");
-});
+export default function App() {
+  const dispatch = useDispatch();
+  const isFetchingCurrentUser=useSelector(authSelectors.getIsFetchingCurrentUser)
 
-// function App() {
-  
-//   const token = useSelector((state) => state.token);
+  useEffect(() => {
+    dispatch(authOperations.fetchCurrentUser());
+  }, [dispatch]);
 
-//   return (
-//     <Suspense fallback={<div>Loading</div>}>
-//       <Routes>
-//         <Route path="/" element={<Layout />}>
-//           <Route path="/users/login" element={token ? <Navigate replace to="/contacts" /> : <LoginView />} />
-//           <Route path="/users/signup" element={token ? <Navigate replace to="/contacts" /> : <Register />} />
-//           <Route path="/contacts" element={<PrivateRoute token={token}><Contacts/></PrivateRoute>}/>
-//           <Route path="contacts/:id" element={!token ? <Navigate replace to="/" /> : <ContactView />} /> 
-//           <Route
-//             path="*"
-//             element={
-//               <div>
-//                 <h2>Oops we have a problem</h2>
-//                 <h3>Pages not found</h3>
-//               </div>
-//             }
-//           ></Route>
-//         </Route>
-//       </Routes>
-//     </Suspense>
-//   );
-// }
+  return ( !isFetchingCurrentUser && <Container>
+    <AppBar />
 
-// export default App;
-
-
-
-
-
-function App() {
-const isLoggedIn = useSelector(authSelectors.getIsLoggedIn);
-const contacts = useSelector(state=>state.contacts.items);
-console.log(contacts)
-
-const dispatch = useDispatch();
-  const isFetchingCurrentUser = useSelector(authSelectors.getIsFetchingCurrent);
-useEffect(() => {
-  dispatch(authOperations.fetchCurrentUser());
-}, [dispatch]);
-
-return (
-  (!isFetchingCurrentUser &&
-    <>
-  <Suspense fallback={<div>Loading</div>}>
+    <Suspense fallback={<p>Завантажуємо...</p>}>
     <Routes>
-      <Route path="/" element={<Layout />}>
-      <Route path="/users/login" element={<PublicRoute restricted token={isLoggedIn}><LoginView/></PublicRoute>}/>
-        <Route path="/users/signup" element={<PublicRoute restricted token={isLoggedIn}><Register/></PublicRoute>}/>
-        <Route path="/contacts" element={<PrivateRoute token={isLoggedIn}><Contacts/></PrivateRoute>}/>
-        <Route path="contacts/:id" element={<PrivateRoute token={isLoggedIn}><ContactView/></PrivateRoute>}/>
-        <Route
-          path="*"
-          element={
-            <div>
-              <h2>Oops we have a problem</h2>
-              <h3>Pages not found</h3>
-            </div>
-          }
-        ></Route>
-      </Route>
-    </Routes>
-  </Suspense>
-  </>
-  )
-);
+      <Route path="/" element={
+            <PublicRoute >
+           <HomeView/>
+           </PublicRoute>
+      } />
+      <Route path="/register" element={
+         <PublicRoute restricted>
+           <RegisterView/>
+         </PublicRoute>
+      } />
+      <Route path="/login" element={
+            <PublicRoute restricted>
+              <LoginView/>
+            </PublicRoute>} />
+            <Route
+            path="contacts"
+            element={
+              <PrivateRoute>
+                <ContactsView />
+              </PrivateRoute>
+            }
+          />
+          <Route path="*" element={
+          <PublicRoute >
+           <HomeView/>
+           </PublicRoute>}
+          />
+      </Routes>
+    </Suspense>
+  </Container>
+    
+  );
 }
-
-export default App;

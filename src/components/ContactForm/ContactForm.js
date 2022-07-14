@@ -1,95 +1,105 @@
-import f from "./ContactForm.module.css";
 import { useState } from "react";
-import { useGetContactsQuery } from "..//../redux/api/contactsApi";
-import contactsOperations from '../../redux/contacts/contacts-operations'
+import PropTypes from 'prop-types';
+import { useSelector, useDispatch } from 'react-redux';
 import { getContacts } from '../../redux/contacts/contacts-selectors';
-
-function Form() {
-
-  return (
-    <></>
-  );
-}
+import contactsOperations from '../../redux/contacts/contacts-operations'
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+//import styles from './ContactForm.module.css'
 
 
-// function Form({ btnTitle, contName = "", contNumber = "", addContact, id , updateList}) {
-//   const [name, setName] = useState(contName);
-//   const [number, setNumber] = useState(contNumber);
-//   const { data: contacts } = useGetContactsQuery();
+ function  ContactForm(){ 
+   const [name, setName] = useState('');
+   const [number, setNumber] = useState('');
 
-//   const onChangeInput = (e) => {
-//     const { name, value } = e.currentTarget;
+  const contacts = useSelector(getContacts);
+  const dispatch = useDispatch();
 
-//     switch (name) {
-//       case "name":
-//         setName(value);
-//         break;
-//       case "number":
-//         setNumber(value);
-//         break;
-//         default: return;
-//     }
-//   };
+  const shortid = require("shortid");
+  const nameInputId = shortid.generate();
+  const numberInputId = shortid.generate();
 
-//   const formSubmitHandler = async (values) => {
-//     let exist = false;
-//     if (contacts.length >= 0) {
-//       contacts.forEach((contact) => {
-//         if (contact.name.toLowerCase() === values.name.toLowerCase()) {
-//           exist = true;
-//         }
-//       });
-//     }
-//     if (!exist) {
-//       return await addContact(values);
-//     }
-//     if (exist && id) {
-//       return await addContact(values);
-//     } else alert(`${values.name} is already i contacts`);
-//   };
+  const onSaveContactClicked = (data) => {
+    const message = `${data.name} is alredy in contacts`;
+    const findName = contacts.find(contact => contact.name.toLowerCase() === data.name.toLowerCase());
+    const findNumber = contacts.find(contact => contact.number === data.number);
+  
+    if (findName || findNumber !== undefined) {
+      alert(message);
+      return
+    };
+    
+    if (contacts) {
+      dispatch(contactsOperations.addContacts(name, number));
+       
+    }
+  }
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSaveContactClicked ({name, number});
+    reset();
+  };
 
-//   const reset = () => {
-//     setName("");
-//     setNumber("");
-//   };
+   const reset = () => {
+     setName('');
+     setNumber(''); 
+  };
+  const handleChangeName = (e) => {
+    setName(e.currentTarget.value);
+    };
+    
+   const handleChangeNumber = (e) => {
+       setNumber(e.currentTarget.value);
+     };
+  
 
-//   const onSubmitForm = (e) => {
-//     e.preventDefault();
-//     formSubmitHandler({ name, number, id });
-//     updateList()
-//     reset();
-//   };
+    return (
+      <div>
+      <form type="submit"
+      onSubmit={handleSubmit}>
+        <label htmlFor={nameInputId}>
+          Ім'я
+          <TextField
+             margin="normal"
+             fullWidth
+            type="text"
+            name="name"
+            value={name}
+            onChange={handleChangeName}
+            placeholder="Enter name"
+            aria-label="Input for your name"
+            id={nameInputId}
+            pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
+            title="Name may contain only letters, apostrophe, dash and spaces."
+            required
+          />
+        </label>
+        <label htmlFor={numberInputId}>
+         Номер
+          <TextField
+           margin="normal"
+           fullWidth
+            type="tel"
+            name="number"
+            placeholder="Enter number"
+            value={number}
+            onChange={handleChangeNumber}
+            id={numberInputId}
+            pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
+            title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
+            required
+          />
+          
+        </label>
+        <Button variant="contained" color="success"  type='submit'>Додати Контакт</Button>
+      </form>
+      </div>
+    );
+};
 
-//   return (
-//     <form onSubmit={onSubmitForm} className={f.form}>
-//       <label className={f.label}>
-//         Name
-//         <input
-//           type="text"
-//           name="name"
-//           value={name}
-//           pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
-//           title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
-//           required
-//           onChange={onChangeInput}
-//         />
-//       </label>
-//       <label className={f.label}>
-//         Number
-//         <input
-//           type="tel"
-//           name="number"
-//           value={number}
-//           pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
-//           title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
-//           required
-//           onChange={onChangeInput}
-//         />
-//       </label>
+export default ContactForm;
 
-//       <button type="submit">{btnTitle}</button>
-//     </form>
-//   );
-// }
-
-export default Form;
+  //========================== propTypes ===================
+ ContactForm.propTypes = {
+    onSubmit: PropTypes.func,
+  };
