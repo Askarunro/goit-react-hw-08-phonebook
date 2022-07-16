@@ -1,167 +1,82 @@
-import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { authOperations } from '../redux/auth';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { useState, useEffect } from "react";
+import { useRegisterUserMutation } from "..//redux/api/usersApi";
+import { TextField, Button, Grid } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
-function Copyright(props) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
-
-const theme = createTheme();
+const styles = {
+  form: {
+    width: 320,
+  },
+  label: {
+    display: "flex",
+    flexDirection: "column",
+    marginBottom: 15,
+  },
+};
 
 export default function RegisterView() {
+  const [registerUser, isError] = useRegisterUserMutation();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  let navigate = useNavigate();
+  const [token, setToken] = useState("");
 
-  const dispatch = useDispatch();
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  useEffect(() => {
+    localStorage.setItem("token", JSON.stringify(token));
+  }, [token]);
 
   const handleChange = ({ target: { name, value } }) => {
     switch (name) {
-      case 'name':
+      case "name":
         return setName(value);
-      case 'email':
+      case "email":
         return setEmail(value);
-      case 'password':
+      case "password":
         return setPassword(value);
       default:
         return;
     }
   };
 
-  const handleSubmit = e => {
-    e.preventDefault();
-
-    if (!name) return toast.error('Please enter user name');
-    if (!email) return toast.error('Please enter email');
-    if (!password) return toast.error('Please enter password');
-    
-
-    dispatch(authOperations.register({ name, email, password }));
-    setName('');
-    setEmail('');
-    setPassword('');
+  const formSubmitHandler = async (values) => {
+    const res = await registerUser(values);
+    try {
+      if (res.data.token) {
+        setToken(res.data.token);
+        return navigate("/contacts");
+      }
+      return console.log(isError);
+    } catch {
+      return console.log(isError);
+    }
   };
 
+  const reset = () => {
+    setName("");
+    setEmail("");
+    setPassword("");
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    formSubmitHandler({ name, email, password });
+    reset();
+  };
 
   return (
-    <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <Box
-          sx={{
-            marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign up
-          </Typography>
-          <Box component="form" onSubmit={handleSubmit} >
-            <Grid container spacing={2} >
-              <Grid item xs={12}>
-                <TextField
-                  autoComplete="given-name"
-                  aria-label="Input for your name"
-                  type="text"
-                  name="name"
-                  required
-                  fullWidth
-                  id="name"
-                  label="name"
-                  pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
-                  value={name} onChange={handleChange}
-                  title="Имя может состоять только из букв, апострофа, тире и пробелов. Например Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan и т. п."
-                  autoFocus
-                />
-              </Grid>
-             
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="email"
-                  label="Email Address"
-                  type="email"
-                  name="email"
-                  aria-label="Input for your Email"
-                  pattern="/^([a-z0-9_\.-]+)@([a-z0-9_\.-]+)\.([a-z\.]{2,6})$"
-                  autoComplete="email"
-                  value={email}
-                 onChange={handleChange}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$"
-                  type="password"
-                  id="password"
-                  autoComplete="new-password"
-                  aria-label="Input for your password"
-                  value={password}
-                  onChange={handleChange}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <FormControlLabel
-                  control={<Checkbox value="allowExtraEmails" color="primary" />}
-                  label="I want to receive inspiration, marketing promotions and updates via email."
-                />
-              </Grid>
-            </Grid>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Sign Up
-            </Button>
-            <Grid container justifyContent="flex-end">
-              <Grid item>
-                <Link href="#" variant="body2">
-                  Already have an account? Sign in
-                </Link>
-              </Grid>
-            </Grid>
-          </Box>
-        </Box>
-        <Copyright sx={{ mt: 5 }} />
-        <ToastContainer/>
-      </Container>
-    </ThemeProvider>
+    <div>
+      <form onSubmit={handleSubmit} style={styles.form} autoComplete="off">
+        <Grid container direction="column" justifyContent="space-between" alignItems="center" gap={4}>
+          <h1>Rergister page</h1>
+          <TextField required label="Name" type="text" name="name" value={name} onChange={handleChange} />
+          <TextField required label="Email" type="email" name="email" value={email} onChange={handleChange} />
+          <TextField required label="Password" type="password" name="password" value={password} onChange={handleChange} />
+          <Button type="submit" variant="outlined" color="success" size="large">
+            Ok
+          </Button>
+        </Grid>
+      </form>
+    </div>
   );
 }

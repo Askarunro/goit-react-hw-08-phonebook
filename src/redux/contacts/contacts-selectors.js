@@ -3,7 +3,6 @@ export const getFilter = state => state.contacts.filter;
 
 export const getVisibleContacts = state => {
   const contacts = getContacts(state);
-  console.log('contacts', contacts)
   const filter = getFilter(state);
   const normalizedFilter = filter.toLowerCase();
 

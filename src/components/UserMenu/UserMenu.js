@@ -1,69 +1,68 @@
-import { useDispatch, useSelector } from 'react-redux';
-import { authSelectors, authOperations } from '../../redux/auth';
-import defaultAvatar from './default-avatar.png';
-import Avatar from '@mui/material/Avatar';
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
+import { Button, Grid } from "@mui/material";
+import {
+  useGetUsersQuery,
+  useLogoutUserMutation,
+} from "..//../redux/api/usersApi";
+import { useNavigate } from "react-router-dom";
+import { Logout } from "@mui/icons-material";
+import l from "../Layout/Layout.module.css";
 
+import { useDispatch, useSelector } from "react-redux";
+import { authSelectors, authOperations } from "../../redux/auth";
 
-const styles = {
-  container: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  avatar: {
-    marginRight: 4,
-  },
-  name: {
-    fontWeight: 700,
-    marginRight: 12,
-  },
-};
+function UserMenu() {
+  // const [logoutUser] = useLogoutUserMutation();
+  // const { data: user } = useGetUsersQuery();
+  // let navigate = useNavigate();
 
-export default function UserMenu() {
+  // const logoutClick = async () => {
+  //   const res = await logoutUser();
+  //   // await navigate("/users/login", { replace: true });
+  //   try {
+  //   return
+
+  //   } catch {}
+  // };
+
+  // const handleClick = (e) => {
+  //   localStorage.setItem("token", JSON.stringify(""));
+  //   logoutClick();
+  //   navigate("/", { replace: true });
+  // };
+
+  // return (
+  //   <Grid container direction="row" justifyContent="space-between" alignItems="center" gap={4}>
+  //     {user && <h3>{user.email}</h3>}
+  //     <Button onClick={handleClick} variant="contained" color="success" className={l.nav}>
+  //       <Logout />
+  //       LogOut
+  //     </Button>
+  //   </Grid>
+  // );
+
   const dispatch = useDispatch();
   const name = useSelector(authSelectors.getUsername);
-  const avatar = defaultAvatar;
 
-  function stringToColor(string) {
-    let hash = 0;
-    let i;
-  
-    /* eslint-disable no-bitwise */
-    for (i = 0; i < string.length; i += 1) {
-      hash = string.charCodeAt(i) + ((hash << 5) - hash);
-    }
-  
-    let color = '#';
-  
-    for (i = 0; i < 3; i += 1) {
-      const value = (hash >> (i * 8)) & 0xff;
-      color += `00${value.toString(16)}`.slice(-2);
-    }
-    /* eslint-enable no-bitwise */
-  
-    return color;
-  }
-  
-function stringAvatar(name) {
-  return {
-    sx: {
-      bgcolor: stringToColor(name),
-    },
-    children: `${name.split(' ')[0][0]}`,
-  };
-}
   return (
-    <div style={styles.container}>
-   
-      <span style={styles.name}>{name}</span>
-      <Stack style={styles.name} direction="row" spacing={2}>
-        
-      <Avatar {...stringAvatar(`${name}`)} />
-     </Stack>
-
-     <Button color="success" size="small" variant="contained" type="button" onClick={() => dispatch(authOperations.logOut())} >Вийти</Button>
-  
-    </div>
+    <Grid
+      container
+      direction="row"
+      justifyContent="space-between"
+      alignItems="center"
+      gap={4}
+    >
+      {name && <h3>{name}</h3>}
+      <Button
+        onClick={() => dispatch(authOperations.logOut())}
+        variant="contained"
+        color="success"
+        className={l.nav}
+      >
+        <Logout />
+        LogOut
+      </Button>
+    </Grid>
   );
 }
+
+export default UserMenu;
